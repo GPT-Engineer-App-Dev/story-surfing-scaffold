@@ -11,7 +11,7 @@ const fetchTopStories = async () => {
   return response.json();
 };
 
-const HackerNewsList = ({ searchTerm }) => {
+const HackerNewsList = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['topStories'],
     queryFn: fetchTopStories,
@@ -19,15 +19,11 @@ const HackerNewsList = ({ searchTerm }) => {
 
   if (error) return <div className="text-red-500">Error: {error.message}</div>;
 
-  const filteredStories = data?.hits.filter(story =>
-    story.title.toLowerCase().includes(searchTerm.toLowerCase())
-  ) || [];
-
   return (
     <div className="space-y-4">
       {isLoading
         ? Array(10).fill().map((_, index) => <StoryCardSkeleton key={index} />)
-        : filteredStories.map(story => <StoryCard key={story.objectID} story={story} />)
+        : data?.hits.map(story => <StoryCard key={story.objectID} story={story} />)
       }
     </div>
   );
